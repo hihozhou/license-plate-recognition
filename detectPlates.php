@@ -27,6 +27,7 @@ function detectPlatesInScene(Mat $imgOriginalScene)
         imshow('1b', $imgThreshScene);
     }
     $arrayOfPossibleCharsInScene = findPossibleCharsInScene($imgThreshScene);
+
     if (SHOW_STEPS) {
         print_r("step 2 - arrayOfPossibleCharsInScene.Count = " . count($arrayOfPossibleCharsInScene) . "\r\n");
         $imgContours = Mat::zerosBySize($imgOriginalScene->size(), CV_8UC3);
@@ -37,10 +38,11 @@ function detectPlatesInScene(Mat $imgOriginalScene)
         drawContours($imgContours, $contours, -1, $scalarWhite);
         imshow("2b", $imgContours);
     }
+    //success
     $arrayOfArrayOfMatchingCharsInScene = findArrayOfArraysOfMatchingChars($arrayOfPossibleCharsInScene);
-    if (SHOW_STEPS) {
-        print_r('step 3 - vectorOfVectorsOfMatchingCharsInScene.size()' . count($arrayOfArrayOfMatchingCharsInScene));        // 13 with MCLRNF1 image
 
+    if (SHOW_STEPS) {
+        print_r('step 3 - vectorOfVectorsOfMatchingCharsInScene.size() = ' . count($arrayOfArrayOfMatchingCharsInScene)."\r\n");        // 13 with MCLRNF1 image
         $imgContours = Mat::zerosBySize($imgOriginalScene->size(), CV_8UC3);
 
         foreach ($arrayOfArrayOfMatchingCharsInScene as $vectorOfMatchingChars) {
@@ -91,6 +93,6 @@ function findPossibleCharsInScene(Mat &$imgThresh)
         print_r("step 2 - intCountOfValidPossibleChars = " . $intCountOfPossibleChars . "\r\n");
         imshow("2a", $imgContours);
     }
-    return ($arrayOfPossibleChars);
+    return $arrayOfPossibleChars;
 
 }

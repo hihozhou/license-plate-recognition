@@ -36,8 +36,8 @@ class possibleChar
     {
         $this->contour = $contour;
         $this->boundingRect = boundingRect($contour);
-        $this->intCenterX = ($this->boundingRect->x + $this->boundingRect->x + $this->boundingRect->width) / 2;
-        $this->intCenterY = ($this->boundingRect->y + $this->boundingRect->y + $this->boundingRect->height) / 2;
+        $this->intCenterX = intval(($this->boundingRect->x + $this->boundingRect->x + $this->boundingRect->width) / 2);
+        $this->intCenterY = intval(($this->boundingRect->y + $this->boundingRect->y + $this->boundingRect->height) / 2);
         $this->dblDiagonalSize = sqrt(pow($this->boundingRect->width, 2) + pow($this->boundingRect->height, 2));
         $this->dblAspectRatio = (float)$this->boundingRect->width / (float)$this->boundingRect->height;
     }

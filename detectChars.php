@@ -64,27 +64,33 @@ function checkIfPossibleChar($possibleChar)
     return false;
 }
 
+
 function findArrayOfArraysOfMatchingChars(array $arrayOfPossibleChars)
 {
     $arrayOfArraysOfMatchingChars = [];
-    foreach ($arrayOfPossibleChars as $possibleChar) {
-        $arrayOfMatchingChars = findVectorOfMatchingChars($possibleChar, $arrayOfPossibleChars);
-        $arrayOfMatchingChars[] = $possibleChar;
-        if (count($arrayOfMatchingChars) < MIN_NUMBER_OF_MATCHING_CHARS) {
+    foreach ($arrayOfPossibleChars as &$possibleChar) {
+        $vectorOfMatchingChars = findVectorOfMatchingChars($possibleChar, $arrayOfPossibleChars);
+
+        $vectorOfMatchingChars[] = $possibleChar;
+        if (count($vectorOfMatchingChars) < MIN_NUMBER_OF_MATCHING_CHARS) {
             continue;
         }
-        $arrayOfArraysOfMatchingChars[] = $arrayOfMatchingChars;
+        $arrayOfArraysOfMatchingChars[] = $vectorOfMatchingChars;
+//        exit;
+
         $arrayOfPossibleCharsWithCurrentMatchesRemoved = [];
-        foreach ($arrayOfPossibleChars as $possChar) {
-            if (in_array($possChar, $arrayOfMatchingChars) && $possChar == end($arrayOfMatchingChars)) {//todo
+//        $arrayOfPossibleCharsWithCurrentMatchesRemoved = array_diff($arrayOfPossibleChars, $vectorOfMatchingChars);
+        foreach ($arrayOfPossibleChars as &$possChar) {
+            if (!in_array($possChar, $vectorOfMatchingChars)) {//todo
                 $arrayOfPossibleCharsWithCurrentMatchesRemoved[] = $possChar;
             }
         }
+        // recursive call
         $recursiveVectorOfVectorsOfMatchingChars = findArrayOfArraysOfMatchingChars($arrayOfPossibleCharsWithCurrentMatchesRemoved);
         foreach ($recursiveVectorOfVectorsOfMatchingChars as $recursiveVectorOfMatchingChars) {      // for each vector of matching chars found by recursive call
             $arrayOfArraysOfMatchingChars[] = $recursiveVectorOfMatchingChars;               // add to our original vector of vectors of matching chars
         }
-
+//
         break;
 
     }
@@ -105,9 +111,10 @@ function findVectorOfMatchingChars($possibleChar, $arrayOfChars)
         $dblChangeInArea = (double)abs($possibleMatchingChar->boundingRect->area() - $possibleChar->boundingRect->area()) / (double)$possibleChar->boundingRect->area();
         $dblChangeInWidth = (double)abs($possibleMatchingChar->boundingRect->width - $possibleChar->boundingRect->width) / (double)$possibleChar->boundingRect->width;
         $dblChangeInHeight = (double)abs($possibleMatchingChar->boundingRect->height - $possibleChar->boundingRect->height) / (double)$possibleChar->boundingRect->height;
-
+//        exit;
         // check if chars match
-        if ($dblDistanceBetweenChars < ($possibleChar->dblDiagonalSize * MAX_DIAG_SIZE_MULTIPLE_AWAY) &&
+        if ($dblDistanceBetweenChars < (
+                $possibleChar->dblDiagonalSize * MAX_DIAG_SIZE_MULTIPLE_AWAY) &&
             $dblAngleBetweenChars < MAX_ANGLE_BETWEEN_CHARS &&
             $dblChangeInArea < MAX_CHANGE_IN_AREA &&
             $dblChangeInWidth < MAX_CHANGE_IN_WIDTH &&
@@ -123,9 +130,9 @@ function findVectorOfMatchingChars($possibleChar, $arrayOfChars)
 
 function distanceBetweenChars(PossibleChar $firstChar, PossibleChar $secondChar)
 {
+
     $intX = abs($firstChar->intCenterX - $secondChar->intCenterX);
     $intY = abs($firstChar->intCenterY - $secondChar->intCenterY);
-
     return (sqrt(pow($intX, 2) + pow($intY, 2)));
 }
 
@@ -133,6 +140,7 @@ function angleBetweenChars(PossibleChar $firstChar, PossibleChar $secondChar)
 {
     $dblAdj = abs($firstChar->intCenterX - $secondChar->intCenterX);
     $dblOpp = abs($firstChar->intCenterY - $secondChar->intCenterY);
+
 
     $dblAngleInRad = atan($dblOpp / $dblAdj);
 

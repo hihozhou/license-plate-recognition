@@ -10,6 +10,8 @@ use function CV\{
     imshow, waitKey
 };
 
+error_reporting(E_ALL^E_NOTICE^E_WARNING);
+
 const SHOW_STEPS = true;
 $gaussianSmoothFilterSize = new Size(5, 5);
 const ADAPTIVE_THRESH_BLOCK_SIZE = 19;
